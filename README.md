@@ -1,5 +1,7 @@
 # Radr
 
+![radr](images/radr.png)
+
 An smart rear facing radar for your bike. Instead of using mmWave radar tech, this project uses an inexpensive raspberry pi zero 2, a camera and Coral.ai TPU accelerator to detect objects behind you.
 
 ## MVP features:
