@@ -30,3 +30,7 @@ cd radr && sudo docker build -t radr-v1 .
 sudo docker run --rm -it --privileged radr-v1
 ```
 The `--privileged` flag is required to access the camera and USB accelerator.
+
+Example of the current model output:
+
+![object detection on road image](images/predict.png)
