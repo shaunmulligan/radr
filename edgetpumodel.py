@@ -268,4 +268,4 @@ class EdgeTPUModel:
             if save_img:
               cv2.imwrite(output_path, output_image)
             
-        return det
+        return det, output_image
