@@ -7,8 +7,7 @@ An smart rear facing radar for your bike. Instead of using mmWave radar tech, th
 ## MVP features:
 - Detect cars, cyclist (person + bicycle) and people behind you.
     - Use the Coral.ai TPU accelerator to run the model, hopefully at ~ 25 FPS.
-    - Track multiple objects at once with something like DeepSORT.
-        - Get distance and speed of objects.
+    - Track multiple objects at once.
 - Implement the radar BLE Gatt service to send alerts to a cycling computer.
 - 3D print a case for the pi zero 2, camera, TPU accelerator and battery that slips in under the saddle.
 
@@ -30,6 +29,7 @@ cd radr && sudo docker build -t radr-v1 .
 sudo docker run --rm -it --privileged radr-v1
 ```
 The `--privileged` flag is required to access the camera and USB accelerator.
+3. You should now be able to see the video stream on `http://<RPI_IP_ADDRESS>:8080/video`
 
 ## Testing with video file.
 If a video file with `.mp4` extension is found in the root directory, the model will run on the video file instead of the camera. This offers a nice way to consistently test the model on a known input.
