@@ -1,11 +1,13 @@
 # app.py
 import threading
+import logging
 import cv2
 import numpy as np
 from fastapi import FastAPI
 from starlette.responses import StreamingResponse
 from detector import Detector
-import logging
+from norfair import Detection, Tracker, draw_tracked_objects
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -14,22 +16,38 @@ app = FastAPI()
 
 class VideoCamera(object):
     def __init__(self):
-        self.video = Detector()
-        self.current_frame = self.video.get_objects()[0]
+        self.detector = Detector()
+        self.tracker = Tracker(distance_function="euclidean", distance_threshold=100)
+
+        # Get the initial frame from the detector
+        self.current_frame, _ = self.detector.get_objects()
 
         # Start a background thread to keep updating the current frame
         threading.Thread(target=self.update_frame, daemon=True).start()
 
+    def update_frame(self):
+        while True:
+            # get image and detected objects
+            image, objs = self.detector.get_objects()
+
+            # Convert detections to Norfair format
+            norfair_detections = [Detection(np.array([[box[0], box[1]], [box[2], box[3]]])) for box in objs[0]]
+
+            # Update the tracker with the new detections
+            tracked_objects = self.tracker.update(detections=norfair_detections)
+
+            # Perform tracking and draw tracked objects on the image
+            draw_tracked_objects(image, tracked_objects)
+
+            # Update current frame
+            self.current_frame = image
+
     def get_frame(self):
         encoded_frame = cv2.imencode('.jpg', self.current_frame)[1].tobytes()
         return encoded_frame
-
-    def update_frame(self):
-        while True:
-            self.current_frame = self.video.get_objects()[0]
     
     def close(self):
-        self.video.close()
+        self.detector.close()
 
 camera = VideoCamera()
 

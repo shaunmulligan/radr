@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y libedgetpu1-std python3-pycoral libopen
 
 # Install Python deps
 RUN pip3 install --upgrade pip setuptools wheel
-RUN python3 -m pip install numpy tqdm pyyaml fastapi
+RUN python3 -m pip install numpy tqdm pyyaml fastapi scipy==1.8.1
 
 COPY . /app
 
