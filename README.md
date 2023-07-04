@@ -31,6 +31,9 @@ sudo docker run --rm -it --privileged radr-v1
 ```
 The `--privileged` flag is required to access the camera and USB accelerator.
 
+## Testing with video file.
+If a video file with `.mp4` extension is found in the root directory, the model will run on the video file instead of the camera. This offers a nice way to consistently test the model on a known input.
+
 Example of the current model output:
 
 ![object detection on road image](images/predict.png)

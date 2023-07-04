@@ -224,7 +224,7 @@ class EdgeTPUModel:
         
         return np.array(out).astype(int)
 
-    def process_predictions(self, det, output_image, pad, output_path="detection.jpg", save_img=True, save_txt=True, hide_labels=False, hide_conf=False):
+    def process_predictions(self, det, output_image, pad, output_path="detection.jpg", save_img=True, save_txt=False, hide_labels=False, hide_conf=False):
         """
         Process predictions and optionally output an image with annotations
         """
