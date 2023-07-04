@@ -10,10 +10,10 @@ RUN apt-get update && apt-get install -y libedgetpu1-std python3-pycoral libopen
 
 # Install Python deps
 RUN pip3 install --upgrade pip setuptools wheel
-RUN python3 -m pip install numpy tqdm pyyaml
+RUN python3 -m pip install numpy tqdm pyyaml fastapi
 
 COPY . /app
 
 WORKDIR /app
 
-CMD ["python3", "main.py"]
+CMD python3 -m uvicorn main:app --host 0.0.0.0 --port 8080
