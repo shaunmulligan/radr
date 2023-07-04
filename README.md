@@ -34,8 +34,3 @@ The `--privileged` flag is required to access the camera and USB accelerator.
 Example of the current model output:
 
 ![object detection on road image](images/predict.png)
-
-## Start webserver:
-```bash
-uvicorn webstream:app
-```
