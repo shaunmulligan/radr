@@ -1,4 +1,4 @@
-# app.py
+import glob
 import threading
 import logging
 import cv2
@@ -8,15 +8,14 @@ from starlette.responses import StreamingResponse
 from detector import Detector
 from norfair import Detection, Tracker, draw_points
 
-
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
 class VideoCamera(object):
-    def __init__(self):
-        self.detector = Detector()
+    def __init__(self, input=0):
+        self.detector = Detector(input_source=input)
         self.tracker = Tracker(distance_function="euclidean", distance_threshold=150)
 
         # Get the initial frame from the detector
@@ -49,7 +48,15 @@ class VideoCamera(object):
     def close(self):
         self.detector.close()
 
-camera = VideoCamera()
+# If a file with *.mp4 extension is found in the root folder, it will be used as input else use camera 0
+video_files = glob.glob("*.mp4")
+
+if video_files:
+    logger.info("Found video file: {}".format(video_files[0]))
+    camera = VideoCamera(input=video_files[0])
+else:
+    logger.info("No video file found, using camera 0")
+    camera = VideoCamera(input=0)
 
 @app.get('/')
 def index():
