@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class Detector:
-    def __init__(self, model_path='models/yolov5s-int8-224_edgetpu.tflite', names_path='models/coco.yaml', conf_thresh=0.25, iou_thresh=0.45, cam_id=0):
+    def __init__(self, model_path='models/yolov5s-int8-224_edgetpu.tflite', names_path='models/coco.yaml', conf_thresh=0.40, iou_thresh=0.45, cam_id=0):
         logger.info('Loading {} with {} labels and using camera: .'.format(model_path, names_path, cam_id))
         self.model = EdgeTPUModel(model_path, names_path, conf_thresh=conf_thresh, iou_thresh=iou_thresh)
         self.input_size = self.model.get_image_size()

@@ -6,7 +6,7 @@ import numpy as np
 from fastapi import FastAPI
 from starlette.responses import StreamingResponse
 from detector import Detector
-from norfair import Detection, Tracker, draw_tracked_objects
+from norfair import Detection, Tracker, draw_points
 
 
 logging.basicConfig(level=logging.INFO)
@@ -17,7 +17,7 @@ app = FastAPI()
 class VideoCamera(object):
     def __init__(self):
         self.detector = Detector()
-        self.tracker = Tracker(distance_function="euclidean", distance_threshold=100)
+        self.tracker = Tracker(distance_function="euclidean", distance_threshold=150)
 
         # Get the initial frame from the detector
         self.current_frame, _ = self.detector.get_objects()
@@ -31,13 +31,13 @@ class VideoCamera(object):
             image, objs = self.detector.get_objects()
 
             # Convert detections to Norfair format
-            norfair_detections = [Detection(np.array([[box[0], box[1]], [box[2], box[3]]])) for box in objs[0]]
+            norfair_detections = [Detection(np.array([[box[0], box[1]], [box[2], box[3]]]), scores=np.array([box[4], box[4]])) for box in objs[0]]
 
             # Update the tracker with the new detections
             tracked_objects = self.tracker.update(detections=norfair_detections)
-
-            # Perform tracking and draw tracked objects on the image
-            draw_tracked_objects(image, tracked_objects)
+            logger.info("Tracked objects: {}".format(tracked_objects))
+            # Draw the points of each tracked object
+            draw_points(image, drawables=tracked_objects, radius=5, color='by_id', draw_ids=True, draw_labels=False)
 
             # Update current frame
             self.current_frame = image
